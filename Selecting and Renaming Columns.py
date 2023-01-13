@@ -152,4 +152,40 @@ user.select(*list_of_columns).show()
 
 # COMMAND ----------
 
+## Let's understand about changing datatype
+
+# COMMAND ----------
+
+calling = col('id')
+
+# COMMAND ----------
+
+user.select(calling).show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import date_format
+
+# COMMAND ----------
+
+user.select('id', 'start_date', date_format('start_date', 'yyyyMMdd').alias('new_date')).show()
+
+# COMMAND ----------
+
+user.select('id', 'start_date', date_format('start_date', 'yyyyMMdd').alias('new_date')).dtypes
+
+# COMMAND ----------
+
+user.select('id', 'start_date', date_format('start_date', 'yyyyMMdd').cast('int').alias('new_date')).dtypes
+
+# COMMAND ----------
+
+user.select('id' , 'last_update', date_format('last_update', 'yyyyMMdd').cast('int').alias('Last Upadted Date')).show()
+
+# COMMAND ----------
+
+user.select('id' , 'last_update', date_format('last_update', 'yyyyMMdd').cast('int').alias('Last Upadted Date')).dtypes
+
+# COMMAND ----------
+
 
