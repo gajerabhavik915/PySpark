@@ -188,4 +188,28 @@ user.select('id' , 'last_update', date_format('last_update', 'yyyyMMdd').cast('i
 
 # COMMAND ----------
 
+user.show()
+
+# COMMAND ----------
+
+## below command will not work as sum can be done between two integer value, here one is string and second one is integer.
+
+# COMMAND ----------
+
+user.select('id', 'amount_paid', ('amount_paid'+25)).show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import lit, col
+
+# COMMAND ----------
+
+user.select('id', (col('amount_paid') + lit(25)).alias('New_Amt')).show()
+
+# COMMAND ----------
+
+user.selectExpr('id', 'amount_paid', '(amount_paid + 25) AS New_Amt').show()
+
+# COMMAND ----------
+
 
