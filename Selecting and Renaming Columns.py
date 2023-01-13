@@ -95,4 +95,61 @@ user.select(col('id'), 'f_name', 'l_name', concat(col('f_name'), lit(' '), col('
 
 # COMMAND ----------
 
+user.selectExpr('id', 'f_name', 'l_name', "concat(f_name, ' ', l_name) as Full_name").show()
+
+# COMMAND ----------
+
+user.createOrReplaceTempView('usr')
+
+# COMMAND ----------
+
+spark.sql("""
+   select id, f_name, l_name, concat(f_name, ' ' ,l_name) as Full_name from usr
+   """).show()
+
+# COMMAND ----------
+
+##Below two commad will not work as alias is already given even though it has used prior name
+
+# COMMAND ----------
+
+user.alias('usr').select(user['id'], 'usr.f_name', 'usr.l_name').show()
+
+# COMMAND ----------
+
+user.alias('usr').selectExpr(user['id'], 'usr.f_name', 'usr.l_name').show()
+
+# COMMAND ----------
+
+## below command will not work, as selectExpr only take string operation, here col is given 
+
+# COMMAND ----------
+
+user.selectExpr(col('id'), 'f_name', 'l_name').show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import concat, col, lit
+
+# COMMAND ----------
+
+user.alias('usr').selectExpr('id', "concat(usr.f_name, ' ', usr.l_name) as full_name").show()
+
+# COMMAND ----------
+
+user.createOrReplaceTempView('usr')
+
+# COMMAND ----------
+
+spark.sql("""
+   select u.id, u.l_name, u.f_name from usr as u
+   """). show()
+
+# COMMAND ----------
+
+list_of_columns = ['id', 'f_name', 'l_name']
+user.select(*list_of_columns).show()
+
+# COMMAND ----------
+
 
