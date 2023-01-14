@@ -318,22 +318,6 @@ user.select(user['id'].alias('user_id'), user['f_name'].alias('first_name'), use
    withColumn('Full_name', concat(col('first_name'), lit(' '), col('last_name'))). \
    show()
 
-# COMMAND ----------
 
-required_column = ['id', 'f_name', 'l_name', 'email', 'is_customer']
-modified_column = ['usr_id', 'usr_f_name', 'usr_l_name', 'usr_email', 'usr_is_customer']
-## how to modified all column name togather
-
-# COMMAND ----------
-
-user.select(required_column).show()
-
-# COMMAND ----------
-
-user.select(required_column). \
-   toDF(*modified_column). \
-   show()
-
-# COMMAND ----------
 
 
