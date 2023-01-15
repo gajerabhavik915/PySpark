@@ -102,4 +102,97 @@ spark.sql("""
 
 # COMMAND ----------
 
+## For Boolean value.
 
+# COMMAND ----------
+
+user.filter(col('is_customer') == True).show()
+
+# COMMAND ----------
+
+user.where(col('is_customer') == 'true').show()
+
+# COMMAND ----------
+
+user.filter('is_customer == true').show()
+
+# COMMAND ----------
+
+user.filter('is_customer = true').show()
+
+# COMMAND ----------
+
+user.filter(col('customer_from') == 'Akshardham').show()
+
+# COMMAND ----------
+
+user.where('customer_from = "Akshardham"').show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import cast
+
+# COMMAND ----------
+
+new_user = user.select('id', 'f_name', 'l_name', col('amount_paid').cast('int')).show(truncate = False)
+
+# COMMAND ----------
+
+## how to get None value from table
+
+# COMMAND ----------
+
+from pyspark.sql.functions import isnan
+
+# COMMAND ----------
+
+user.filter(isnan('amount_paid') == False).show()
+
+# COMMAND ----------
+
+user.filter(isnan('amount_paid') == True).show()
+
+# COMMAND ----------
+
+user.select('id', 'f_name', 'l_name', 'customer_from'). \
+   filter(col('customer_from') != 'Akshardham').show()
+
+# COMMAND ----------
+
+user.select('id', 'l_name', 'f_name'). \
+   filter("customer_from == 'Akshardham' or customer_from == 'Bramhand'").show() 
+
+# COMMAND ----------
+
+user.select('id', 'f_name', 'l_name').  
+   filter(col('last_update').between('2021-01-01','2021-05-01')). \
+   show()
+
+# COMMAND ----------
+
+user.select('id','f_name', 'l_name'). \
+   filter(col('amount_paid').between(4000, 7000)).show()
+
+# COMMAND ----------
+
+user.filter(col('amount_paid').between(4000 and 7000)).show()
+
+# COMMAND ----------
+
+user.filter('amount_paid BETWEEN 4000 AND 7000').show()
+
+# COMMAND ----------
+
+user.filter(col('customer_from') != ' ').show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import col
+
+# COMMAND ----------
+
+user.where(col('customer_from').isNotNull()).show()
+
+# COMMAND ----------
+
+ 
