@@ -195,4 +195,63 @@ user.where(col('customer_from').isNotNull()).show()
 
 # COMMAND ----------
 
- 
+##Try to find out user's city is null or with empty space.
+
+# COMMAND ----------
+
+user.filter((col('customer_from').isNull()) | (col('customer_from') == '')).show()
+
+# COMMAND ----------
+
+user.where("customer_from == 'Akshardham' OR customer_from == 'Bramhand'").show()
+
+# COMMAND ----------
+
+user.select('id', 'f_name', 'l_name'). \
+   filter(col('customer_from').isin('Akshardham','Bramhand')).show()
+
+# COMMAND ----------
+
+user.select('id', 'f_name', 'l_name'). \
+   filter("customer_from IN ('Akshardham','Bramhand')").show()
+
+# COMMAND ----------
+
+## Let's learn how to use greater or less than and equal to  
+
+# COMMAND ----------
+
+user.filter(col('amount_paid') > 5000).show()
+
+# COMMAND ----------
+
+user.where("amount_paid > 5000").show()
+
+# COMMAND ----------
+
+user.where("amount_paid Between 2000 and 7000").show()
+
+# COMMAND ----------
+
+user.filter((col('amount_paid') > 2000) & ((col('amount_paid') < 7000) | (col('amount_paid') == 7000))).show()
+
+# COMMAND ----------
+
+user.where(col('amount_paid').isin(2000, 5000)).show()
+
+# COMMAND ----------
+
+## get the users who became customer between 20th Jan 2020 and Feb 2020 
+
+# COMMAND ----------
+
+from pyspark.sql.functions import col
+
+# COMMAND ----------
+
+user.select('*'). \
+   filter((col('start_date').between('2020-01-01', '2020-03-01')) & (col('is_customer') == True)).show()
+
+# COMMAND ----------
+
+
