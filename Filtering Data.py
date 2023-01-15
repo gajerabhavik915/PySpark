@@ -250,7 +250,17 @@ from pyspark.sql.functions import col
 # COMMAND ----------
 
 user.select('*'). \
-   filter((col('start_date').between('2020-01-01', '2020-03-01')) & (col('is_customer') == True)).show()
+   filter((col('start_date').between('2020-01-01', '2020-03-01')) & (col('is_customer') == 'True')).show()
+
+# COMMAND ----------
+
+user.select('id', 'email'). \
+   filter((col('is_customer') == False) | (col('last_update')<'2021-07-01')).show()
+
+# COMMAND ----------
+
+user.select('id', 'email'). \
+   filter("is_customer = False OR last_update < '2021-07-01'").show() 
 
 # COMMAND ----------
 
