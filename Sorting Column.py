@@ -97,14 +97,113 @@ user = spark.createDataFrame([Row(**user) for user in users])
 # COMMAND ----------
 
 user.show()
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
 
 # COMMAND ----------
 
 user.select('*').sort('f_name').show()
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
 
 # COMMAND ----------
 
 user.select('*').orderBy('f_name').show()
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+user.select('*').orderBy(user['f_name']).show()
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import col
+
+# COMMAND ----------
+
+user.select('*').orderBy(col('f_name')).show()
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+user.select('*').sort('f_name', ascending = False).show()
+
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+user.select('*').sort(user['f_name'].desc()).show()
+
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|courses|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       3000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true| [1, 2]|       7000|        {null, null}|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|    [1]|       3000|{345678915, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true| [1, 2]|       4000|{234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|    [1]|       8000|{234867891, 23466...|     Bramhand|2020-02-01|2021-02-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-------+-----------+--------------------+-------------+----------+-------------------+
+
 
 # COMMAND ----------
 
