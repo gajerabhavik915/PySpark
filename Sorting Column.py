@@ -498,4 +498,121 @@ user.select('id').sort(user['id'].asc()).show()
 
 # COMMAND ----------
 
+## how to sort two column at a time.
+
+# COMMAND ----------
+
+user.select('id', 'f_name').sort('id', 'f_name').show()
+
+# +----+------------+
+# |  id|      f_name|
+# +----+------------+
+# |null|        null|
+# |null|Ghanashyamay|
+# |null|Ghanashyamay|
+# |null|        Hari|
+# |   1|        Hari|
+# |   1|        Hari|
+# |   2|  Ghanashyam|
+# |   3|Ghanashyamay|
+# |   3|   shreeHari|
+# |   3|   shreeHari|
+# |   4|      Lalaji|
+# +----+------------+
+
+# COMMAND ----------
+
+user.select('id', 'f_name').sort(user['id'].desc(), user['f_name'].asc()).show()
+
+# +----+------------+
+# |  id|      f_name|
+# +----+------------+
+# |   4|      Lalaji|
+# |   3|Ghanashyamay|
+# |   3|   shreeHari|
+# |   3|   shreeHari|
+# |   2|  Ghanashyam|
+# |   1|        Hari|
+# |   1|        Hari|
+# |null|        null|
+# |null|Ghanashyamay|
+# |null|Ghanashyamay|
+# |null|        Hari|
+# +----+------------+
+
+# COMMAND ----------
+
+user.select('id', 'f_name').sort(col('id').desc_nulls_first(), user['f_name'].asc()).show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import desc
+
+# COMMAND ----------
+
+from pyspark.sql.functions import asc
+
+# COMMAND ----------
+
+user.select('id', 'f_name').sort(asc(user['id']), desc(user['f_name'])).show()
+
+# +----+------------+
+# |  id|      f_name|
+# +----+------------+
+# |null|        Hari|
+# |null|Ghanashyamay|
+# |null|Ghanashyamay|
+# |null|        null|
+# |   1|        Hari|
+# |   1|        Hari|
+# |   2|  Ghanashyam|
+# |   3|   shreeHari|
+# |   3|   shreeHari|
+# |   3|Ghanashyamay|
+# |   4|      Lalaji|
+# +----+------------+
+
+# COMMAND ----------
+
+user.select('id', 'f_name').sort('id', asc('f_name')).show()
+
+# +----+------------+
+# |  id|      f_name|
+# +----+------------+
+# |null|        null|
+# |null|Ghanashyamay|
+# |null|Ghanashyamay|
+# |null|        Hari|
+# |   1|        Hari|
+# |   1|        Hari|
+# |   2|  Ghanashyam|
+# |   3|Ghanashyamay|
+# |   3|   shreeHari|
+# |   3|   shreeHari|
+# |   4|      Lalaji|
+# +----+------------+
+
+# COMMAND ----------
+
+user.select('f_name','id', 'l_name').sort(['f_name', 'id'], asc = [0,1]).show()
+
+# this one is for [1,0]
+# +------------+----+-----------+
+# |      f_name|  id|     l_name|
+# +------------+----+-----------+
+# |        null|null|       null|
+# |  Ghanashyam|   2|    Ghanuji|
+# |Ghanashyamay|null|   Pandeyji|
+# |Ghanashyamay|null|       null|
+# |Ghanashyamay|   3|       null|
+# |        Hari|null|      Ghanu|
+# |        Hari|   1|      Ghanu|
+# |        Hari|   1|      Ghanu|
+# |      Lalaji|   4| Lalacharan|
+# |   shreeHari|   3|Ghanshyamji|
+# |   shreeHari|   3|Ghanshyamji|
+# +------------+----+-----------+
+
+# COMMAND ----------
+
 
