@@ -447,4 +447,39 @@ user.groupBy('user_id', 'user_first_name').agg(sum(user_paid['price_paid'])).sho
 
 # COMMAND ----------
 
+from pyspark.sql.functions import when 
+
+# COMMAND ----------
+
+user = users_df.alias('user').join(course_enrolments_df.alias('course'), users_df.user_id == course_enrolments_df.user_id, 'left').select('user.user_id', 'user.user_first_name', 'course.price_paid')
+
+# +-------+---------------+----------+
+# |user_id|user_first_name|price_paid|
+# +-------+---------------+----------+
+# |      1|         Jaydip|      null|
+# |      2|         Vishal|      null|
+# |      3|         Bhavik|      9.99|
+# |      3|         Bhavik|     10.99|
+# |      4|         Dhaval|     10.99|
+# |      4|         Dhaval|     10.99|
+# |      5|           Meet|      9.99|
+# |      5|           Meet|     10.99|
+# |      5|           Meet|      9.99|
+# |      6|          Shyam|      null|
+# |      7|         Krutik|     10.99|
+# |      7|         Krutik|     10.99|
+# |      7|         Krutik|     10.99|
+# |      8|         Jenish|      9.99|
+# |      8|         Jenish|     10.99|
+# |      8|         Jenish|      9.99|
+# |      9|         Sanket|      9.99|
+# |     10|            Jay|      9.99|
+# +-------+---------------+----------+
+
+# COMMAND ----------
+
+user = users_df.alias('user').join(course_enrolments_df.alias('course'), users_df.user_id == course_enrolments_df.user_id, 'left').groupBy('user.user_id','user.user_first_name').agg(sum(when(users_df['price_paid'].isNull(), 0).otherwise(users_df['price_paid'])).alias('price')).show()
+
+# COMMAND ----------
+
 
