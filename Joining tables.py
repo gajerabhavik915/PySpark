@@ -270,7 +270,7 @@ users_df.show()
 
 # COMMAND ----------
 
-## How to know who studying which subjectsa?
+## How to know who are studying which subjects?
 
 # COMMAND ----------
 
@@ -342,6 +342,108 @@ n_table.groupBy('course_title', 'is_active').agg(count('user_first_name').alias(
 # |          Docker 101|     true|             3|
 # |      AWS Essentials|    false|             3|
 # +--------------------+---------+--------------+
+
+# COMMAND ----------
+
+users_df.show()
+
+
+# COMMAND ----------
+
+course_enrolments_df.show()
+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import isnan
+
+# COMMAND ----------
+
+from pyspark.sql.functions import col
+
+# COMMAND ----------
+
+## How to know who have paid how much fees?
+
+# COMMAND ----------
+
+user = users_df.alias('user').join(course_enrolments_df.alias('course'), users_df.user_id == course_enrolments_df.user_id, 'left').select('user.user_id', 'user.user_first_name', 'course.price_paid')
+
+# +-------+---------------+----------+
+# |user_id|user_first_name|price_paid|
+# +-------+---------------+----------+
+# |      1|         Jaydip|      null|
+# |      2|         Vishal|      null|
+# |      3|         Bhavik|      9.99|
+# |      3|         Bhavik|     10.99|
+# |      4|         Dhaval|     10.99|
+# |      4|         Dhaval|     10.99|
+# |      5|           Meet|      9.99|
+# |      5|           Meet|     10.99|
+# |      5|           Meet|      9.99|
+# |      6|          Shyam|      null|
+# |      7|         Krutik|     10.99|
+# |      7|         Krutik|     10.99|
+# |      7|         Krutik|     10.99|
+# |      8|         Jenish|      9.99|
+# |      8|         Jenish|     10.99|
+# |      8|         Jenish|      9.99|
+# |      9|         Sanket|      9.99|
+# |     10|            Jay|      9.99|
+# +-------+---------------+----------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import col
+
+# COMMAND ----------
+
+user_paid = user.select('*').filter('price_paid is not null')
+
+# just for checking 
+# +-------+---------------+----------+
+# |user_id|user_first_name|price_paid|
+# +-------+---------------+----------+
+# |      3|         Bhavik|     10.99|
+# |      3|         Bhavik|      9.99|
+# |      4|         Dhaval|     10.99|
+# |      4|         Dhaval|     10.99|
+# |      5|           Meet|      9.99|
+# |      5|           Meet|     10.99|
+# |      5|           Meet|      9.99|
+# |      7|         Krutik|     10.99|
+# |      7|         Krutik|     10.99|
+# |      7|         Krutik|     10.99|
+# |      8|         Jenish|      9.99|
+# |      8|         Jenish|     10.99|
+# |      8|         Jenish|      9.99|
+# |      9|         Sanket|      9.99|
+# |     10|            Jay|      9.99|
+# +-------+---------------+----------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import sum
+
+# COMMAND ----------
+
+# user_paid.groupBy('user_id', 'user_first_name').agg(sum(user_paid['price_paid'])).show()
+user.groupBy('user_id', 'user_first_name').agg(sum(user_paid['price_paid'])).show()
+
+# +-------+---------------+---------------+
+# |user_id|user_first_name|sum(price_paid)|
+# +-------+---------------+---------------+
+# |      1|         Jaydip|           null|
+# |      2|         Vishal|           null|
+# |      3|         Bhavik|          20.98|
+# |      4|         Dhaval|          21.98|
+# |      6|          Shyam|           null|
+# |      5|           Meet|          30.97|
+# |      7|         Krutik|          32.97|
+# |      9|         Sanket|           9.99|
+# |     10|            Jay|           9.99|
+# |      8|         Jenish|          30.97|
+# +-------+---------------+---------------+
 
 # COMMAND ----------
 
