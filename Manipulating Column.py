@@ -136,4 +136,74 @@ df.select(current_date().alias('Ajani_Tarikh')).show()
 
 # COMMAND ----------
 
+df1 = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/c0851337@mylambton.ca/sample_data.csv")
+
+# COMMAND ----------
+
+from pyspark.sql.functions import concat_ws
+
+# COMMAND ----------
+
+from pyspark.sql.functions import col
+
+# COMMAND ----------
+
+df1.withColumn('name & Age', concat_ws(' ', col('Name'), col('age'))).show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import upper, lower,initcap, length
+
+# COMMAND ----------
+
+df1.select('id', 'name').\
+   withColumn('UpperName', upper(col('name'))). \
+   withColumn('lowerName', lower(col('name'))). \
+   withColumn('initCapName', initcap(col('name'))). \
+   withColumn('legthName', length(col('name'))).show()
+
+# +---+--------+---------+---------+-----------+---------+
+# | id|    name|UpperName|lowerName|initCapName|legthName|
+# +---+--------+---------+---------+-----------+---------+
+# |  1|    Dett|     DETT|     dett|       Dett|        4|
+# |  2|   Nern |    NERN |    nern |      Nern |        5|
+# |  3| Kallsie|  KALLSIE|  kallsie|    Kallsie|        7|
+# |  4|   Siuau|    SIUAU|    siuau|      Siuau|        5|
+# |  5|Shennice| SHENNICE| shennice|   Shennice|        8|
+# |  6|  Chasse|   CHASSE|   chasse|     Chasse|        6|
+# |  7|  Tommye|   TOMMYE|   tommye|     Tommye|        6|
+# |  8| Dorcast|  DORCAST|  dorcast|    Dorcast|        7|
+# |  9| Angelee|  ANGELEE|  angelee|    Angelee|        7|
+# | 10| Willoom|  WILLOOM|  willoom|    Willoom|        7|
+# | 11| Waeston|  WAESTON|  waeston|    Waeston|        7|
+# | 12|   Rosma|    ROSMA|    rosma|      Rosma|        5|
+# | 13|Felisaas| FELISAAS| felisaas|   Felisaas|        8|
+# | 14| Demetas|  DEMETAS|  demetas|    Demetas|        7|
+# | 15| Jeromyw|  JEROMYW|  jeromyw|    Jeromyw|        7|
+# | 16|  Rashid|   RASHID|   rashid|     Rashid|        6|
+# | 17|    Dett|     DETT|     dett|       Dett|        4|
+# | 18|   Nern |    NERN |    nern |      Nern |        5|
+# | 19| Kallsie|  KALLSIE|  kallsie|    Kallsie|        7|
+# | 20|   Siuau|    SIUAU|    siuau|      Siuau|        5|
+# +---+--------+---------+---------+-----------+---------+
+# only showing top 20 rows
+
+# COMMAND ----------
+
+from pyspark.sql.functions import substring, lit
+
+# COMMAND ----------
+
+l = [('l', )]
+
+# COMMAND ----------
+
+df = spark.createDataFrame(l)
+
+# COMMAND ----------
+
+df.select(substring(lit('Hello World'), 1, 5)).show()
+
+# COMMAND ----------
+
 
