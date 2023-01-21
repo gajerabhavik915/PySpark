@@ -90,4 +90,50 @@ df1.groupBy(date_format('new_date', 'yyyyMM').alias('Year_month')).agg(count('ne
 
 # COMMAND ----------
 
+## How to create Dummy dataframe
+
+# COMMAND ----------
+
+l = [('l', )]
+
+# COMMAND ----------
+
+df = spark.createDataFrame(l)
+
+# COMMAND ----------
+
+df.show()
+
+# +---+
+# | _1|
+# +---+
+# |  l|
+# +---+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import current_date
+
+# COMMAND ----------
+
+df.select(current_date()).show()
+
+# +--------------+
+# |current_date()|
+# +--------------+
+# |    2023-01-21|
+# +--------------+
+
+# COMMAND ----------
+
+df.select(current_date().alias('Ajani_Tarikh')).show()
+
+# +------------+
+# |Ajani_Tarikh|
+# +------------+
+# |  2023-01-21|
+# +------------+
+
+# COMMAND ----------
+
 
