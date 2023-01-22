@@ -335,4 +335,38 @@ df1.select('id', col('age')*lit('2')).show()
 
 # COMMAND ----------
 
+from pyspark.sql.functions import substring, col, lit
+
+# COMMAND ----------
+
+l = [('l', )]
+
+# COMMAND ----------
+
+df = spark.createDataFrame(l)
+
+# COMMAND ----------
+
+df.select(substring(lit('Hello World'), -2, 6)).show()
+
+# COMMAND ----------
+
+df.select(substring(lit('9057812974'), 6, 7)).show()
+
+# COMMAND ----------
+
+
+df1 = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/c0851337@mylambton.ca/sample_data.csv")
+
+# COMMAND ----------
+
+df1.show()
+
+# COMMAND ----------
+
+df1.select('id', 'name'). \
+   withColumn('name', substring(col('NAME'), 1, 3)).show()
+
+# COMMAND ----------
+
 
