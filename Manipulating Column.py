@@ -876,4 +876,129 @@ date.select('id', 'new_date'). \
 
 # COMMAND ----------
 
+date.select('id', 'new_date', trunc('new_date', 'MM').alias('first_MonthDate')).show()
+
+# +---+----------+---------------+
+# | id|  new_date|first_MonthDate|
+# +---+----------+---------------+
+# |  1|2020-01-01|     2020-01-01|
+# |  2|2020-02-01|     2020-02-01|
+# |  3|2020-03-01|     2020-03-01|
+# |  4|2020-05-01|     2020-05-01|
+# +---+----------+---------------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import date_trunc
+
+# COMMAND ----------
+
+date.select('id', 'new_date'). \
+   withColumn('willReturnWIth_TimeStamp_month', date_trunc('MM', 'new_date')). \
+   withColumn('willReturnWIth_TimeStamp_year', date_trunc('yyyy', 'new_date')).show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import weekofyear, dayofyear, dayofmonth, dayofweek
+
+# COMMAND ----------
+
+date.select('id', 'new_date', month('new_date').alias('Abstrected_month'), year('new_date'), weekofyear('new_date'), dayofyear('new_date'), dayofmonth('new_date'), dayofweek('new_date')).show()
+
+# +---+----------+----------------+--------------+--------------------+-------------------+--------------------+-------------------+
+# | id|  new_date|Abstrected_month|year(new_date)|weekofyear(new_date)|dayofyear(new_date)|dayofmonth(new_date)|dayofweek(new_date)|
+# +---+----------+----------------+--------------+--------------------+-------------------+--------------------+-------------------+
+# |  1|2020-01-01|               1|          2020|                   1|                  1|                   1|                  4|
+# |  2|2020-02-01|               2|          2020|                   5|                 32|                   1|                  7|
+# |  3|2020-03-01|               3|          2020|                   9|                 61|                   1|                  1|
+# |  4|2020-05-01|               5|          2020|                  18|                122|                   1|                  6|
+# +---+----------+----------------+--------------+--------------------+-------------------+--------------------+-------------------+
+
+
+# COMMAND ----------
+
+date.show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import to_date, to_timestamp, lit
+
+# COMMAND ----------
+
+date.select('id', to_date('start_date', 'yyyyMMdd').alias('new_date1')).show()
+
+# COMMAND ----------
+
+l = [('l', )]
+
+# COMMAND ----------
+
+l = spark.createDataFrame(l).toDF('dummy')
+
+# COMMAND ----------
+
+l.select(to_date(lit('02-March-2014'), 'dd-MMMM-yyyy')).show()
+
+# +------------------------------------+
+# |to_date(02-March-2014, dd-MMMM-yyyy)|
+# +------------------------------------+
+# |                          2014-03-02|
+# +------------------------------------+
+
+# COMMAND ----------
+
+l.select(to_timestamp(lit('02-March-2014 10:12:45'), 'dd-MMMM-yyyy HH:mm:ss')).show()
+
+# +-----------------------------------------------------------+
+# |to_timestamp(02-March-2014 10:12:45, dd-MMMM-yyyy HH:mm:ss)|
+# +-----------------------------------------------------------+
+# |                                        2014-03-02 10:12:45|
+# +-----------------------------------------------------------+
+
+# COMMAND ----------
+
+date.show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import date_format
+
+# COMMAND ----------
+
+date.select('id', 'new_date'). \
+   withColumn('onlyYear&Month', date_format('new_date', 'yyyyMM')).show()
+
+# +---+----------+--------------+
+# | id|  new_date|onlyYear&Month|
+# +---+----------+--------------+
+# |  1|2020-01-01|        202001|
+# |  2|2020-02-01|        202002|
+# |  3|2020-03-01|        202003|
+# |  4|2020-05-01|        202005|
+# +---+----------+--------------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import cast
+
+# COMMAND ----------
+
+date1 = date.select('id', date_format('new_date', 'yyyyD').cast('int').alias('YearAndDayofYear')).show()
+
+# +---+----------------+
+# | id|YearAndDayofYear|
+# +---+----------------+
+# |  1|           20201|
+# |  2|          202032|
+# |  3|          202061|
+# |  4|         2020122|
+# +---+----------------+
+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import substring 
+
+# COMMAND ----------
+
 
