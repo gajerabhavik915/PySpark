@@ -1084,4 +1084,127 @@ date1.select('id', 'unix', f.from_unixtime('unix', 'd MMM yyyy')).show()
 
 # COMMAND ----------
 
+import datetime 
+
+# COMMAND ----------
+
+from pyspark.sql import Row
+
+# COMMAND ----------
+
+users = [{'id' : 1,
+          'f_name':'Hari',
+          'l_name': None,
+          'email': 'ghanu@hari.com',
+          'is_customer': True,
+          'amount_paid': 4000,
+          'Phone Number' : [234567891, 2345136789],
+          'customer_from': 'Akshardham',
+          'start_date': datetime.date(2020,1,1),
+          'last_update': datetime.datetime(2021, 1,1,15,0)
+         },
+         {
+          'id' : 2,
+          'f_name':'Ghanashyam',
+          'l_name': None,
+          'email': 'ghanuji@ghanashyam.com',
+          'is_customer': False,
+          'amount_paid': None,
+          'Phone Number' : [234567891, 2345136789],
+          'customer_from': 'Brahmhand',
+          'start_date': datetime.date(2020,2,1),
+          'last_update': datetime.datetime(2021, 2,1,15,0)
+         },
+         {
+          'id' : None,
+          'f_name':'shreeHari',
+          'l_name': 'Ghanshyamji',
+          'email': 'ghanu@shareehari.com',
+          'is_customer': True,
+          'amount_paid': 7000,
+          'Phone Number' : [234567854391, 234513678945],
+          'customer_from': 'Purushotam',
+          'start_date': datetime.date(2020,4,1),
+          'last_update': datetime.datetime(2021, 5,1,15,0)
+         },
+         {
+             'id' : None,
+          'f_name':'Lalaji',
+          'l_name': 'Lalacharan',
+          'email': 'ghanu@lalsharan.com',
+          'is_customer': False,
+          'amount_paid': None,
+          'Phone Number' : [234567891, 2345136789],
+          'customer_from': 'AksharOradi',
+          'start_date': datetime.date(2020,8,1),
+          'last_update': datetime.datetime(2021,9,1,15,0)
+         }
+    
+]
+
+# COMMAND ----------
+
+from pyspark.sql.functions import lit
+
+# COMMAND ----------
+
+user = spark.createDataFrame([Row(**user) for user in users])
+
+# +----+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# |  id|    f_name|     l_name|               email|is_customer|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +----+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# |   1|      Hari|       null|      ghanu@hari.com|       true|       4000|[234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |   2|Ghanashyam|       null|ghanuji@ghanashya...|      false|       null|[234567891, 23451...|    Brahmhand|2020-02-01|2021-02-01 15:00:00|
+# |null| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true|       7000|[234567854391, 23...|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |null|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|       null|[234567891, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# +----+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+user.select('id', 'f_name', 'amount_paid'). \
+   withColumn('new_paid', f.coalesce('amount_paid', lit(0))).show()
+
+# +----+----------+-----------+--------+
+# |  id|    f_name|amount_paid|new_paid|
+# +----+----------+-----------+--------+
+# |   1|      Hari|       4000|    4000|
+# |   2|Ghanashyam|       null|       0|
+# |null| shreeHari|       7000|    7000|
+# |null|    Lalaji|       null|       0|
+
+# COMMAND ----------
+
+user.fillna(0.0).show()
+
+# +---+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# |  1|      Hari|       null|      ghanu@hari.com|       true|       4000|[234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  2|Ghanashyam|       null|ghanuji@ghanashya...|      false|          0|[234567891, 23451...|    Brahmhand|2020-02-01|2021-02-01 15:00:00|
+# |  0| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true|       7000|[234567854391, 23...|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  0|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|          0|[234567891, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+user.fillna('nothing').show()
+
+# +----+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# |  id|    f_name|     l_name|               email|is_customer|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +----+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# |   1|      Hari|    nothing|      ghanu@hari.com|       true|       4000|[234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |   2|Ghanashyam|    nothing|ghanuji@ghanashya...|      false|       null|[234567891, 23451...|    Brahmhand|2020-02-01|2021-02-01 15:00:00|
+# |null| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true|       7000|[234567854391, 23...|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |null|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|       null|[234567891, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# +----+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+user.fillna('no', 'l_name').fillna(0, 'id').show()
+
+# COMMAND ----------
+
 
