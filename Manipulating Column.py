@@ -349,9 +349,21 @@ df = spark.createDataFrame(l)
 
 df.select(substring(lit('Hello World'), -2, 6)).show()
 
+# +-----------------------------+
+# |substring(Hello World, -2, 6)|
+# +-----------------------------+
+# |                           ld|
+# +-----------------------------+
+
 # COMMAND ----------
 
 df.select(substring(lit('9057812974'), 6, 7)).show()
+
+# +---------------------------+
+# |substring(9057812974, 6, 7)|
+# +---------------------------+
+# |                      12974|
+# +---------------------------+
 
 # COMMAND ----------
 
@@ -366,6 +378,501 @@ df1.show()
 
 df1.select('id', 'name'). \
    withColumn('name', substring(col('NAME'), 1, 3)).show()
+
+# +---+----+
+# | id|name|
+# +---+----+
+# |  1| Det|
+# |  2| Ner|
+# |  3| Kal|
+# |  4| Siu|
+# |  5| She|
+# |  6| Cha|
+# |  7| Tom|
+# |  8| Dor|
+# |  9| Ang|
+# | 10| Wil|
+# | 11| Wae|
+# | 12| Ros|
+# | 13| Fel|
+# | 14| Dem|
+# | 15| Jer|
+# | 16| Ras|
+# | 17| Det|
+# | 18| Ner|
+# | 19| Kal|
+# | 20| Siu|
+# +---+----+
+# only showing top 20 rows
+
+# COMMAND ----------
+
+from pyspark.sql.functions import split, lit, explode, col
+
+# COMMAND ----------
+
+l = [('l', )]
+
+# COMMAND ----------
+
+df = spark.createDataFrame(l)
+
+# COMMAND ----------
+
+df.show()
+
+# +---+
+# | _1|
+# +---+
+# |  l|
+# +---+
+
+# COMMAND ----------
+
+df.select(split(lit("how are you today"), " ")).show()
+
+# +-------------------------------+
+# |split(how are you today,  , -1)|
+# +-------------------------------+
+# |           [how, are, you, t...|
+# +-------------------------------+
+
+# COMMAND ----------
+
+df.select(explode(split(lit('How are you today'), ' '))).show()
+
+# +-----+
+# |  col|
+# +-----+
+# |  How|
+# |  are|
+# |  you|
+# |today|
+# +-----+
+
+# COMMAND ----------
+
+df1.show()
+
+# +---+--------+------+---+----------+-------------+
+# | ID|    NAME|GENDER|AGE|     DATE |      COUNTRY|
+# +---+--------+------+---+----------+-------------+
+# |  1|    Dett|  Male| 18|21/05/2015|Great Britain|
+# |  2|   Nern |Female| 19|15/10/2017|       France|
+# |  3| Kallsie|  Male| 20|16/08/2016|       France|
+# |  4|   Siuau|Female| 21|21/05/2015|Great Britain|
+# |  5|Shennice|  Male| 22|21/05/2016|       France|
+# |  6|  Chasse|Female| 23|15/10/2018|       France|
+# |  7|  Tommye|  Male| 24|16/08/2017|United States|
+# |  8| Dorcast|Female| 25|21/05/2016|United States|
+# |  9| Angelee|  Male| 26|21/05/2017|Great Britain|
+# | 10| Willoom|Female| 27|15/10/2019|       France|
+
+# COMMAND ----------
+
+df1.select('id', explode(split(col('date '), '/'))).show()
+
+# +---+----+
+# | id| col|
+# +---+----+
+# |  1|  21|
+# |  1|  05|
+# |  1|2015|
+# |  2|  15|
+# |  2|  10|
+# |  2|2017|
+# |  3|  16|
+# |  3|  08|
+# |  3|2016|
+# |  4|  21|
+# |  4|  05|
+# |  4|2015|
+# |  5|  21|
+# |  5|  05|
+# |  5|2016|
+# |  6|  15|
+# |  6|  10|
+# |  6|2018|
+# |  7|  16|
+# |  7|  08|
+# +---+----+
+# only showing top 20 rows
+
+# COMMAND ----------
+
+import datetime
+
+# COMMAND ----------
+
+users = [{'id' : 1,
+          'f_name':'Hari',
+          'l_name': 'Ghanu',
+          'email': 'ghanu@hari.com',
+          'is_customer': True,
+          'amount_paid': 4000,
+          'Phone Number' : [234567891, 2345136789],
+          'customer_from': 'Akshardham',
+          'start_date': datetime.date(2020,1,1),
+          'last_update': datetime.datetime(2021, 1,1,15,0)
+         },
+         {
+          'id' : 2,
+          'f_name':'Ghanashyam',
+          'l_name': 'Ghanuji',
+          'email': 'ghanuji@ghanashyam.com',
+          'is_customer': False,
+          'amount_paid': 8000,
+          'Phone Number' : [234567891, 2345136789],
+          'customer_from': 'Brahmhand',
+          'start_date': datetime.date(2020,2,1),
+          'last_update': datetime.datetime(2021, 2,1,15,0)
+         },
+         {
+          'id' : 3,
+          'f_name':'shreeHari',
+          'l_name': 'Ghanshyamji',
+          'email': 'ghanu@shareehari.com',
+          'is_customer': True,
+          'amount_paid': 7000,
+          'Phone Number' : None,
+          'customer_from': 'Purushotam',
+          'start_date': datetime.date(2020,4,1),
+          'last_update': datetime.datetime(2021, 5,1,15,0)
+         },
+         {
+             'id' : 4,
+          'f_name':'Lalaji',
+          'l_name': 'Lalacharan',
+          'email': 'ghanu@lalsharan.com',
+          'is_customer': False,
+          'amount_paid': 3000,
+          'Phone Number' : [234567891, 2345136789],
+          'customer_from': 'AksharOradi',
+          'start_date': datetime.date(2020,8,1),
+          'last_update': datetime.datetime(2021,9,1,15,0)
+         }
+    
+]
+
+# COMMAND ----------
+
+from pyspark.sql import Row
+
+# COMMAND ----------
+
+user = spark.createDataFrame([Row(**user) for user in users])
+
+# +---+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# | id|    f_name|     l_name|               email|is_customer|amount_paid|        Phone Number|customer_from|start_date|        last_update|
+# +---+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+# |  1|      Hari|      Ghanu|      ghanu@hari.com|       true|       4000|[234567891, 23451...|   Akshardham|2020-01-01|2021-01-01 15:00:00|
+# |  2|Ghanashyam|    Ghanuji|ghanuji@ghanashya...|      false|       8000|[234567891, 23451...|    Brahmhand|2020-02-01|2021-02-01 15:00:00|
+# |  3| shreeHari|Ghanshyamji|ghanu@shareehari.com|       true|       7000|                null|   Purushotam|2020-04-01|2021-05-01 15:00:00|
+# |  4|    Lalaji| Lalacharan| ghanu@lalsharan.com|      false|       3000|[234567891, 23451...|  AksharOradi|2020-08-01|2021-09-01 15:00:00|
+# +---+----------+-----------+--------------------+-----------+-----------+--------------------+-------------+----------+-------------------+
+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import explode, split, col
+
+# COMMAND ----------
+
+user.select('id', 'phone number').show()
+
+# COMMAND ----------
+
+users = user.select('id', 'phone number'). \
+   withColumn('splitnumber', explode('phone number')). \
+   drop('phone number')
+
+# +---+-----------+
+# | id|splitnumber|
+# +---+-----------+
+# |  1|  234567891|
+# |  1| 2345136789|
+# |  2|  234567891|
+# |  2| 2345136789|
+# |  4|  234567891|
+# |  4| 2345136789|
+# +---+-----------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import substring
+
+# COMMAND ----------
+
+users.select('id', 'splitnumber'). \
+   withColumn('first3NUM', substring('splitnumber', 1,3)). \
+   withColumn('last4NUM', substring('splitnumber', -4, 4)).show()
+
+# +---+-----------+---------+--------+
+# | id|splitnumber|first3NUM|last4NUM|
+# +---+-----------+---------+--------+
+# |  1|  234567891|      234|    7891|
+# |  1| 2345136789|      234|    6789|
+# |  2|  234567891|      234|    7891|
+# |  2| 2345136789|      234|    6789|
+# |  4|  234567891|      234|    7891|
+# |  4| 2345136789|      234|    6789|
+# +---+-----------+---------+--------+
+
+
+# COMMAND ----------
+
+user.show()
+
+# COMMAND ----------
+
+from pyspark.sql.functions import concat, lpad, rpad, lit
+
+# COMMAND ----------
+
+users = user.select(
+           concat(rpad('f_name', 5, '0'), 
+                  lit(' '),
+                  rpad('l_name', 5, '-'),
+                  rpad('email', 5, '-')).alias('new_column'))
+
+# +--------------------------------------------------------------------+
+# |concat(rpad(f_name, 5, 0),  , rpad(l_name, 5, -), rpad(email, 5, -))|
+# +--------------------------------------------------------------------+
+# |                                                    Hari0 Ghanughanu|
+# |                                                    Ghana Ghanughanu|
+# |                                                    shree Ghansghanu|
+# |                                                    Lalaj Lalacghanu|
+# +--------------------------------------------------------------------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import ltrim, rtrim, trim
+
+# COMMAND ----------
+
+users.select(trim('new_column'), rtrim('new_column')).show()
+
+# +----------------+-----------------+
+# |trim(new_column)|rtrim(new_column)|
+# +----------------+-----------------+
+# |Hari0 Ghanughanu| Hari0 Ghanughanu|
+# |Ghana Ghanughanu| Ghana Ghanughanu|
+# |shree Ghansghanu| shree Ghansghanu|
+# |Lalaj Lalacghanu| Lalaj Lalacghanu|
+# +----------------+-----------------+
+
+
+# COMMAND ----------
+
+l = [('    hello    ', )]
+
+# COMMAND ----------
+
+l=spark.createDataFrame(l).toDF('l')
+
+# COMMAND ----------
+
+l.withColumn('allTrimmed', trim(col('l'))).withColumn('leftTrimmed', ltrim(col('l'))).withColumn('rightTrimmed', rtrim(col('l'))).show()
+
+# +-------------+----------+-----------+------------+
+# |            l|allTrimmed|leftTrimmed|rightTrimmed|
+# +-------------+----------+-----------+------------+
+# |    hello    |     hello|  hello    |       hello|
+# +-------------+----------+-----------+------------+
+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import current_date, current_timestamp
+
+# COMMAND ----------
+
+l = [('l', )]
+
+# COMMAND ----------
+
+l = spark.createDataFrame(l).toDF('dummy')
+
+# COMMAND ----------
+
+l.select(to_date(lit('20201004'), 'yyyyMMdd')).show()
+
+# COMMAND ----------
+
+l.select(current_date()).show()
+
+# COMMAND ----------
+
+l.select(current_timestamp()).show()
+
+# COMMAND ----------
+
+import datetime
+
+# COMMAND ----------
+
+users = [{'id' : 1,
+          'f_name':'Hari',
+          'l_name': 'Ghanu',
+          'email': 'ghanu@hari.com',
+          'is_customer': True,
+          'amount_paid': 4000,
+          'Phone Number' : '234567891',
+          'customer_from': 'Akshardham',
+          'start_date': '20200101',
+          'last_update': datetime.datetime(2021, 1,1,15,0)
+         },
+         {
+          'id' : 2,
+          'f_name':'Ghanashyam',
+          'l_name': 'Ghanuji',
+          'email': 'ghanuji@ghanashyam.com',
+          'is_customer': False,
+          'amount_paid': 8000,
+          'Phone Number' : '23456432591',
+          'customer_from': 'Brahmhand',
+          'start_date': '20200201',
+          'last_update': datetime.datetime(2021, 2,1,15,0)
+         },
+         {
+          'id' : 3,
+          'f_name':'shreeHari',
+          'l_name': 'Ghanshyamji',
+          'email': 'ghanu@shareehari.com',
+          'is_customer': True,
+          'amount_paid': 7000,
+          'Phone Number' : None,
+          'customer_from': 'Purushotam',
+          'start_date': '20200301',
+          'last_update': datetime.datetime(2021, 5,1,15,0)
+         },
+         {
+             'id' : 4,
+          'f_name':'Lalaji',
+          'l_name': 'Lalacharan',
+          'email': 'ghanu@lalsharan.com',
+          'is_customer': False,
+          'amount_paid': 3000,
+          'Phone Number' : '23456762491',
+          'customer_from': 'AksharOradi',
+          'start_date': '20200501',
+          'last_update': datetime.datetime(2021,9,1,15,0)
+         }
+    
+]
+
+# COMMAND ----------
+
+from pyspark.sql import Row
+
+# COMMAND ----------
+
+user = spark.createDataFrame([Row(**user) for user in users])
+
+# COMMAND ----------
+
+## how to convert string to date time formate
+
+# COMMAND ----------
+
+from pyspark.sql.functions import to_date, col
+
+
+# COMMAND ----------
+
+date = user.select('id', 'start_date').withColumn('new_date', to_date(col('start_date'), 'yyyyMMdd'))
+
+# +---+----------+----------+
+# | id|start_date|  new_date|
+# +---+----------+----------+
+# |  1|  20200101|2020-01-01|
+# |  2|  20200201|2020-02-01|
+# |  3|  20200301|2020-03-01|
+# |  4|  20200501|2020-05-01|
+# +---+----------+----------+
+
+# COMMAND ----------
+
+
+from pyspark.sql.functions import datediff, date_add, date_sub
+
+# COMMAND ----------
+
+date.select('id', 'new_date'). \
+   withColumn('add_date', date_add('new_date', 10)). \
+   withColumn('add1_date', date_sub('new_date', 10)).show()
+
+# +---+----------+----------+----------+
+# | id|  new_date|  add_date| add1_date|
+# +---+----------+----------+----------+
+# |  1|2020-01-01|2020-01-11|2019-12-22|
+# |  2|2020-02-01|2020-02-11|2020-01-22|
+# |  3|2020-03-01|2020-03-11|2020-02-20|
+# |  4|2020-05-01|2020-05-11|2020-04-21|
+# +---+----------+----------+----------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import current_date
+
+# COMMAND ----------
+
+date.select('id', 'new_date'). \
+   withColumn('date_difference', datediff(current_date(), 'new_date')).show()
+
+# +---+----------+---------------+
+# | id|  new_date|date_difference|
+# +---+----------+---------------+
+# |  1|2020-01-01|           1118|
+# |  2|2020-02-01|           1087|
+# |  3|2020-03-01|           1058|
+# |  4|2020-05-01|            997|
+# +---+----------+---------------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import months_between, add_months,round, cast
+
+# COMMAND ----------
+
+date.show()
+
+# COMMAND ----------
+
+date.select('id', 'new_date'). \
+   withColumn('monthsDiff', round(months_between(current_date(), 'new_date'), 2)). \
+   withColumn('monthsAdd', (add_months('new_date', 1))).show()
+
+# +---+----------+----------+----------+
+# | id|  new_date|monthsDiff| monthsAdd|
+# +---+----------+----------+----------+
+# |  1|2020-01-01|     36.71|2020-02-01|
+# |  2|2020-02-01|     35.71|2020-03-01|
+# |  3|2020-03-01|     34.71|2020-04-01|
+# |  4|2020-05-01|     32.71|2020-06-01|
+# +---+----------+----------+----------+
+
+# COMMAND ----------
+
+from pyspark.sql.functions import trunc
+
+# COMMAND ----------
+
+date.show()
+
+# COMMAND ----------
+
+date.select('id', 'new_date'). \
+   withColumn('first_MonthDate', trunc('new_date', 'MM')). \
+   withColumn('first_YearDate', trunc('new_date', 'yyyy')).show()
+# +---+----------+---------------+--------------+
+# | id|  new_date|first_MonthDate|first_YearDate|
+# +---+----------+---------------+--------------+
+# |  1|2020-01-01|     2020-01-01|    2020-01-01|
+# |  2|2020-02-01|     2020-02-01|    2020-01-01|
+# |  3|2020-03-01|     2020-03-01|    2020-01-01|
+# |  4|2020-05-01|     2020-05-01|    2020-01-01|
+# +---+----------+---------------+--------------+
 
 # COMMAND ----------
 
