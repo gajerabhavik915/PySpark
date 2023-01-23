@@ -983,7 +983,7 @@ from pyspark.sql.functions import cast
 
 # COMMAND ----------
 
-date1 = date.select('id', date_format('new_date', 'yyyyD').cast('int').alias('YearAndDayofYear')).show()
+date1 = date.select('id', date_format('new_date', 'yyyyD').cast('int').alias('YearAndDayofYear'))
 
 # +---+----------------+
 # | id|YearAndDayofYear|
@@ -998,6 +998,89 @@ date1 = date.select('id', date_format('new_date', 'yyyyD').cast('int').alias('Ye
 # COMMAND ----------
 
 from pyspark.sql.functions import substring 
+
+# COMMAND ----------
+
+date1.select('id', substring('YearAndDayofYear', 1, 4).alias('year'), substring('YearAndDayofYear',5, 5).alias('YearofDay')).show()
+
+# +---+----+---------+
+# | id|year|YearofDay|
+# +---+----+---------+
+# |  1|2020|        1|
+# |  2|2020|       32|
+# |  3|2020|       61|
+# |  4|2020|      122|
+# +---+----+---------+
+
+# COMMAND ----------
+
+date.select('id', 'new_date', date_format('new_date', 'MMMM d yyyy')).show()
+
+# +---+----------+----------------------------------+
+# | id|  new_date|date_format(new_date, MMMM d yyyy)|
+# +---+----------+----------------------------------+
+# |  1|2020-01-01|                    January 1 2020|
+# |  2|2020-02-01|                   February 1 2020|
+# |  3|2020-03-01|                      March 1 2020|
+# |  4|2020-05-01|                        May 1 2020|
+# +---+----------+----------------------------------+
+
+# COMMAND ----------
+
+date.select('id', 'new_date', date_format('new_date', 'EE'), date_format('new_date', 'EEEE')).show()
+
+# +---+----------+-------------------------+---------------------------+
+# | id|  new_date|date_format(new_date, EE)|date_format(new_date, EEEE)|
+# +---+----------+-------------------------+---------------------------+
+# |  1|2020-01-01|                      Wed|                  Wednesday|
+# |  2|2020-02-01|                      Sat|                   Saturday|
+# |  3|2020-03-01|                      Sun|                     Sunday|
+# |  4|2020-05-01|                      Fri|                     Friday|
+# +---+----------+-------------------------+---------------------------+
+
+# COMMAND ----------
+
+from pyspark.sql import functions as f
+
+# COMMAND ----------
+
+date1 = date.select('id', f.unix_timestamp('new_date', 'yyyyMMdd').alias('unix'), f.unix_timestamp('new_date', 'yyyy'))
+
+# +---+----------------------------------+------------------------------+
+# | id|unix_timestamp(new_date, yyyyMMdd)|unix_timestamp(new_date, yyyy)|
+# +---+----------------------------------+------------------------------+
+# |  1|                        1577836800|                    1577836800|
+# |  2|                        1580515200|                    1580515200|
+# |  3|                        1583020800|                    1583020800|
+# |  4|                        1588291200|                    1588291200|
+# +---+----------------------------------+------------------------------+
+
+
+# COMMAND ----------
+
+date1.select('id', 'unix', f.from_unixtime('unix'), f.from_unixtime('unix', 'MMMM d yyyy')).show()
+
+# +---+----------+----------------------------------------+--------------------------------+
+# | id|      unix|from_unixtime(unix, yyyy-MM-dd HH:mm:ss)|from_unixtime(unix, MMMM d yyyy)|
+# +---+----------+----------------------------------------+--------------------------------+
+# |  1|1577836800|                     2020-01-01 00:00:00|                  January 1 2020|
+# |  2|1580515200|                     2020-02-01 00:00:00|                 February 1 2020|
+# |  3|1583020800|                     2020-03-01 00:00:00|                    March 1 2020|
+# |  4|1588291200|                     2020-05-01 00:00:00|                      May 1 2020|
+# +---+----------+----------------------------------------+--------------------------------+
+
+# COMMAND ----------
+
+date1.select('id', 'unix', f.from_unixtime('unix', 'd MMM yyyy')).show()
+
+# +---+----------+-------------------------------+
+# | id|      unix|from_unixtime(unix, d MMM yyyy)|
+# +---+----------+-------------------------------+
+# |  1|1577836800|                     1 Jan 2020|
+# |  2|1580515200|                     1 Feb 2020|
+# |  3|1583020800|                     1 Mar 2020|
+# |  4|1588291200|                     1 May 2020|
+# +---+----------+-------------------------------+
 
 # COMMAND ----------
 
